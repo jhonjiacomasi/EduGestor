@@ -9,7 +9,7 @@ Aplicação web para gerenciamento de oficinas acadêmicas, permitindo o cadastr
 
 | Camada       | Tecnologia                     |
 |--------------|--------------------------------|
-| Backend      | Java 17, Spring Boot, JPA, Hibernate |
+| Backend      | Java 17, Spring Boot, JPA |
 | Frontend     | React|
 | Banco de Dados | PostgreSQL                   |
 | Testes       | JUnit, Mockito, Cypress        |
@@ -36,7 +36,7 @@ Aplicação web para gerenciamento de oficinas acadêmicas, permitindo o cadastr
 [ React SPA ] ←→ [ Spring Boot REST API ] ←→ [ PostgreSQL ]
 ```
 
-- **Frontend**: Interface amigável com React, formulários dinâmicos e dashboards
+- **Frontend**: Interface com React, formulários dinâmicos e dashboards
 - **Backend**: API RESTful com Spring Boot, validações e lógica de negócio
 - **Banco de Dados**: Modelo relacional com entidades como Oficina, Usuário, Certificado
 
