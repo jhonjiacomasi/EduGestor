@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ELLP - Controle de Oficinas</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">ELLP</div>
+      <ul class="nav-links">
+        <li><a href="#home">Início</a></li>
+        <li><a href="#cadastros">Cadastros</a></li>
+        <li><a href="#lista">Listas</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="home" class="hero">
+    <h1>Controle de Oficinas ELLP</h1>
+    <p>Gerencie professores, tutores, alunos e escolas de forma simples e eficiente.</p>
+    <button class="btn" onclick="scrollToSection('cadastros')">Começar</button>
+  </section>
+
+  <section id="cadastros" class="cadastro">
+    <h2>Cadastros</h2>
+    <div class="form-container">
+      <form id="formCadastro">
+        <label for="tipo">Tipo de cadastro:</label>
+        <select id="tipo" required>
+          <option value="">Selecione...</option>
+          <option value="professor">Professor</option>
+          <option value="tutor">Tutor</option>
+          <option value="aluno">Aluno</option>
+          <option value="escola">Escola</option>
+        </select>
+
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" placeholder="Digite o nome" required>
+
+        <label for="extra">Informação adicional:</label>
+        <input type="text" id="extra" placeholder="Ex: escola do aluno ou tema da oficina">
+
+        <button type="submit" class="btn">Cadastrar</button>
+      </form>
+    </div>
+  </section>
+
+  <section id="lista" class="lista">
+    <h2>Listagem de Cadastros</h2>
+    <ul id="listaCadastros"></ul>
+  </section>
+
+  <footer>
+    <p>© 2025 Projeto ELLP - Ensino Lúdico de Lógica e Programação</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
