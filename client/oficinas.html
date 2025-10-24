@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Oficinas — ELLP</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">ELLP</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastros.html">Cadastros</a></li>
+        <li><a href="oficinas.html" class="active">Oficinas</a></li>
+        <li><a href="certificados.html">Certificados</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Oficinas</h2>
+
+    <div class="card">
+      <form id="formOficina">
+        <input required id="ofTema" placeholder="Tema da oficina" />
+        <input id="ofData" type="date" />
+        <label>Professor responsável</label>
+        <select id="ofProfessor"></select>
+        <label>Tutor</label>
+        <select id="ofTutor"></select>
+        <label>Alunos (segure Ctrl / Cmd para selecionar vários)</label>
+        <select id="ofAlunos" multiple size="6"></select>
+        <button class="btn" type="submit">Criar Oficina</button>
+      </form>
+    </div>
+
+    <section class="data-lists">
+      <div class="list-card">
+        <h4>Oficinas Cadastradas</h4>
+        <ul id="listaOficinas"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year3"></span> Projeto ELLP</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/oficinas.js"></script>
+</body>
+</html>

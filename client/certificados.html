@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Certificados — ELLP</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">ELLP</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastros.html">Cadastros</a></li>
+        <li><a href="oficinas.html">Oficinas</a></li>
+        <li><a href="certificados.html" class="active">Certificados</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Gerar Certificado</h2>
+
+    <div class="card">
+      <label>Oficina</label>
+      <select id="certOficina"></select>
+
+      <label>Aluno</label>
+      <select id="certAluno"></select>
+
+      <div class="row">
+        <button id="btnGerar" class="btn">Gerar Certificado</button>
+        <button id="btnGerarTodos" class="btn-outline">Gerar para todos da oficina</button>
+      </div>
+    </div>
+
+    <p class="note">O certificado abrirá em uma nova janela pronta para impressão (Ctrl/Cmd+P → salvar como PDF).</p>
+  </main>
+
+  <footer>
+    <p>© <span id="year4"></span> Projeto ELLP</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/certificados.js"></script>
+</body>
+</html>

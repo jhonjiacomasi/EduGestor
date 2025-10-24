@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cadastros — ELLP</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <nav class="navbar">
+      <div class="logo">ELLP</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Início</a></li>
+        <li><a href="cadastros.html" class="active">Cadastros</a></li>
+        <li><a href="oficinas.html">Oficinas</a></li>
+        <li><a href="certificados.html">Certificados</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Cadastros</h2>
+
+    <div class="grid">
+      <div class="card">
+        <h3>Cadastro de Escola</h3>
+        <form id="formEscola">
+          <input required id="escolaNome" placeholder="Nome da escola" />
+          <input id="escolaCidade" placeholder="Cidade (opcional)" />
+          <button class="btn" type="submit">Cadastrar Escola</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3>Cadastro de Professor / Tutor</h3>
+        <form id="formProfTutor">
+          <select id="profTipo">
+            <option value="professor">Professor</option>
+            <option value="tutor">Tutor</option>
+          </select>
+          <input required id="profNome" placeholder="Nome" />
+          <input id="profEmail" placeholder="E-mail (opcional)" />
+          <button class="btn" type="submit">Cadastrar</button>
+        </form>
+      </div>
+
+      <div class="card full">
+        <h3>Cadastro de Aluno</h3>
+        <form id="formAluno">
+          <input required id="alunoNome" placeholder="Nome do aluno" />
+          <input id="alunoIdade" type="number" min="1" placeholder="Idade (opcional)" />
+          <label for="alunoEscola">Escola</label>
+          <select id="alunoEscola"></select>
+          <button class="btn" type="submit">Cadastrar Aluno</button>
+        </form>
+      </div>
+    </div>
+
+    <section class="data-lists">
+      <div class="list-card">
+        <h4>Escolas</h4>
+        <ul id="listaEscolas"></ul>
+      </div>
+      <div class="list-card">
+        <h4>Professores & Tutores</h4>
+        <ul id="listaProfTut"></ul>
+      </div>
+      <div class="list-card">
+        <h4>Alunos</h4>
+        <ul id="listaAlunos"></ul>
+      </div>
+    </section>
+
+    <section class="backup">
+      <h4>Backup / Importar</h4>
+      <button id="exportBtn" class="btn-outline">Exportar (JSON)</button>
+      <input id="importFile" type="file" accept="application/json"/>
+    </section>
+  </main>
+
+  <footer>
+    <p>© <span id="year2"></span> Projeto ELLP</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+  <script src="js/cadastros.js"></script>
+</body>
+</html>
