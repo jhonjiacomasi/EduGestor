@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Cadastros — ELLP</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/x-icon" href="img/favicon.png">
 </head>
 <body>
   <header>
@@ -23,16 +24,18 @@
     <h2>Cadastros</h2>
 
     <div class="grid">
-      <div class="card">
+      <div class="card full">
         <h3>Cadastro de Escola</h3>
         <form id="formEscola">
           <input required id="escolaNome" placeholder="Nome da escola" />
-          <input id="escolaCidade" placeholder="Cidade (opcional)" />
+          <input required id="escolaCidade" placeholder="Cidade" />
+          <input required id="escolaContato" placeholder="Contato (telefone)" />
+          <input required id="escolaCoordenadorDiretor" placeholder="Coordenador ou Diretor" />
           <button class="btn" type="submit">Cadastrar Escola</button>
         </form>
       </div>
 
-      <div class="card">
+      <div class="card full">
         <h3>Cadastro de Professor / Tutor</h3>
         <form id="formProfTutor">
           <select id="profTipo">
@@ -40,7 +43,10 @@
             <option value="tutor">Tutor</option>
           </select>
           <input required id="profNome" placeholder="Nome" />
-          <input id="profEmail" placeholder="E-mail (opcional)" />
+          <input required id="profEmail" placeholder="E-mail" />
+          <div id="raField" style="display: none;">
+            <input id="tutorRA" placeholder="RA" />
+          </div>
           <button class="btn" type="submit">Cadastrar</button>
         </form>
       </div>
@@ -49,7 +55,10 @@
         <h3>Cadastro de Aluno</h3>
         <form id="formAluno">
           <input required id="alunoNome" placeholder="Nome do aluno" />
-          <input id="alunoIdade" type="number" min="1" placeholder="Idade (opcional)" />
+          <input required id="alunoIdade" type="number" min="1" placeholder="Idade" />
+          <input required id="alunoResponsavel" placeholder="Nome do responsável" />
+          <input required id="alunoContatoResp" placeholder="Contato do responsável" />
+          <input required id="alunoAno" placeholder="Ano matriculado na escola" />
           <label for="alunoEscola">Escola</label>
           <select id="alunoEscola"></select>
           <button class="btn" type="submit">Cadastrar Aluno</button>
