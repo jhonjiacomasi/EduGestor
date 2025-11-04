@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: edugestor
+  datasource:
+    # URL de conexão JDBC para PostgreSQL
+    url: jdbc:postgresql://localhost:5432/edugestor
+    # ATENÇÃO: Use o seu usuário real aqui!
+    username: postgres
+    # ATENÇÃO: Use a sua senha real aqui!
+    password: user
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true

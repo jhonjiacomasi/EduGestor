@@ -3,9 +3,8 @@ package com.edu.gestor.model;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.springframework.data.annotation.Id;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.JoinColumn;
@@ -35,7 +34,7 @@ public class Oficina {
         joinColumns = @JoinColumn(name = "id_oficina"),
         inverseJoinColumns = @JoinColumn(name = "id_tutor")
     )
-    private List<Tutor> tutores;
+    private List<Tutor> tutores; 
 
     @ManyToMany
     @JoinTable(
