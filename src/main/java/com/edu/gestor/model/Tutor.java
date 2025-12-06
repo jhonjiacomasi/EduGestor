@@ -20,4 +20,9 @@ public class Tutor {
 
     @Column(name = "telefone", length = 20)
     private String telefone;
+
+	public void setIdTutor(Integer id2) {
+		// TODO Auto-generated method stub
+		
+	}
 }

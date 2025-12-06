@@ -14,7 +14,7 @@ import lombok.Data;
 public class Escola {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEscola;
+    private Integer idEscola;
 
     private String nomeEscola;
     private String endereco;

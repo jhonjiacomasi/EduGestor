@@ -25,4 +25,8 @@ public class Oficina {
 	@ManyToOne
 	@JoinColumn(name = "id_professor", nullable = false)
 	private Professor professorResponsavel;
+
+	public void setIdOficina(Integer id2) {
+		
+	}
 }

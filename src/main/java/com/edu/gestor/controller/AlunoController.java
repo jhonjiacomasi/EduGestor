@@ -2,29 +2,43 @@ package com.edu.gestor.controller;
 
 import com.edu.gestor.model.Aluno;
 import com.edu.gestor.service.AlunoService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/alunos")
+@RequestMapping("/alunos")
 public class AlunoController {
 
-    @Autowired
-    private AlunoService alunoService;
+    private final AlunoService service;
+
+    public AlunoController(AlunoService service) {
+        this.service = service;
+    }
+
+    @GetMapping
+    public List<Aluno> listar() {
+        return service.listarTodos();
+    }
 
     @PostMapping
-    public ResponseEntity<Aluno> cadastrarAluno(@RequestBody Aluno aluno) {
-        Aluno novoAluno = alunoService.salvarAluno(aluno);
-        return new ResponseEntity<>(novoAluno, HttpStatus.CREATED);
+    public Aluno criar(@RequestBody Aluno aluno) {
+        return service.salvar(aluno);
     }
-    
-    @GetMapping
-    public ResponseEntity<List<Aluno>> listarAlunos() {
-        List<Aluno> alunos = alunoService.listarTodos();
-        return ResponseEntity.ok(alunos);
+
+    @GetMapping("/{id}")
+    public Aluno buscar(@PathVariable Integer id) {
+        return service.buscarPorId(id).orElse(null);
+    }
+
+    @PutMapping("/{id}")
+    public Aluno atualizar(@PathVariable Integer id, @RequestBody Aluno aluno) {
+        aluno.setIdAluno(id);
+        return service.salvar(aluno);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletar(@PathVariable Integer id) {
+        service.deletar(id);
     }
 }

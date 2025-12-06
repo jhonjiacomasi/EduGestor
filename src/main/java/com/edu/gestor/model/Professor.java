@@ -27,4 +27,9 @@ public class Professor {
 
 	@Column(name = "email", length = 100)
 	private String email;
+
+	public void setIdProfessor(Integer id2) {
+		// TODO Auto-generated method stub
+		
+	}
 }
