@@ -1,46 +1,28 @@
 package com.edu.gestor.model;
 
+import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDate;
-import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import lombok.Data;
 
 @Entity
+@Table(name = "oficina")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Oficina {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOficina;
 
-    private String tema;
-    private LocalDate data;
-    private Boolean certificado;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_oficina")
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_professor")
-    private Professor professor;
+	@Column(name = "tema", nullable = false, length = 150)
+	private String tema;
 
-    @ManyToMany
-    @JoinTable(
-        name = "oficina_tutor",
-        joinColumns = @JoinColumn(name = "id_oficina"),
-        inverseJoinColumns = @JoinColumn(name = "id_tutor")
-    )
-    private List<Tutor> tutores; 
+	@Column(name = "data_oficina", nullable = false)
+	private LocalDate dataOficina;
 
-    @ManyToMany
-    @JoinTable(
-        name = "oficina_aluno",
-        joinColumns = @JoinColumn(name = "id_oficina"),
-        inverseJoinColumns = @JoinColumn(name = "id_aluno")
-    )
-    private List<Aluno> alunos;
+	@ManyToOne
+	@JoinColumn(name = "id_professor", nullable = false)
+	private Professor professorResponsavel;
 }

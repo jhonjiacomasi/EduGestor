@@ -2,22 +2,33 @@ package com.edu.gestor.service;
 
 import com.edu.gestor.model.Aluno;
 import com.edu.gestor.repository.AlunoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlunoService {
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    private final AlunoRepository repository;
 
-    public Aluno salvarAluno(Aluno aluno) {
-        return alunoRepository.save(aluno);
+    public AlunoService(AlunoRepository repository) {
+        this.repository = repository;
     }
-    
+
     public List<Aluno> listarTodos() {
-        return alunoRepository.findAll();
+        return repository.findAll();
+    }
+
+    public Optional<Aluno> buscarPorId(Integer id) {
+        return repository.findById(id);
+    }
+
+    public Aluno salvar(Aluno aluno) {
+        return repository.save(aluno);
+    }
+
+    public void deletar(Integer id) {
+        repository.deleteById(id);
     }
 }

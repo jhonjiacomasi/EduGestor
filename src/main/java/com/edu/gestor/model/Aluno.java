@@ -1,29 +1,26 @@
 package com.edu.gestor.model;
 
-import java.util.List;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Table(name = "aluno")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Aluno {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idAluno;
 
-    private String nomeAluno;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_aluno")
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_escola")
-    private Escola escola;
+	@Column(name = "nome_aluno", nullable = false, length = 100)
+	private String nomeAluno;
 
-    @ManyToMany(mappedBy = "alunos")
-    private List<Oficina> oficinas;
+	@Column(name = "email", nullable = false, length = 120, unique = true)
+	private String email;
+
+	@Column(name = "telefone", length = 20)
+	private String telefone;
 }

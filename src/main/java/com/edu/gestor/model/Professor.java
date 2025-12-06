@@ -1,24 +1,30 @@
 package com.edu.gestor.model;
 
-import java.util.List;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "professor")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Professor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProfessor;
 
-    private String nomeProfessor;
-    private String email;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id_professor")
+	private Integer id;
 
-    @OneToMany(mappedBy = "professor")
-    private List<Oficina> oficinas;
+	@Column(name = "nome_professor", nullable = false, length = 100)
+	private String nomeProfessor;
+
+	@Column(name = "email", length = 100)
+	private String email;
 }
