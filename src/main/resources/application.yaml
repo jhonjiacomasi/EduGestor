@@ -1,15 +1,19 @@
 spring:
   application:
     name: edugestor
+
   datasource:
-    # URL de conexão JDBC para PostgreSQL
-    url: jdbc:postgresql://localhost:5432/edugestor
-    # ATENÇÃO: Use o seu usuário real aqui!
+    url: "jdbc:postgresql://localhost:5432/edugestor"
     username: postgres
-    # ATENÇÃO: Use a sua senha real aqui!
     password: user
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+app:
+  jwt:
+    secret: "12345678901234567890123456789012"
+    expiration-ms: 3600000   # 1 hora em ms
