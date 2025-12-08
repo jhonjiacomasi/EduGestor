@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login — ELLP</title>
+  <title>Cadastro de Usuário — ELLP</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="icon" type="image/x-icon" href="img/favicon.png">
 </head>
@@ -12,10 +12,10 @@
     <div class="login-card">
       <div class="login-header">
         <h1>ELLP</h1>
-        <p>Ensino Lúdico de Lógica e Programação</p>
+        <p>Cadastro de Usuário</p>
       </div>
       
-      <form id="loginForm">
+      <form id="cadastroForm">
         <div class="form-group">
           <label for="email">E-mail</label>
           <input 
@@ -38,13 +38,23 @@
           />
         </div>
         
-        <button type="submit" class="login-btn">Entrar</button>
-        <a href="cadastroUsuario.html" class="back-link">Não tem conta? Cadastre-se</a>
+        <div class="form-group">
+          <label for="role">Tipo de Usuário</label>
+          <select id="role" name="role" required>
+            <option value="">Selecione...</option>
+            <option value="admin">Administrador</option>
+            <option value="professor">Professor</option>
+            <option value="tutor">Tutor</option>
+          </select>
+        </div>
+        
+        <button type="submit" class="login-btn">Cadastrar</button>
+        <a href="login.html" class="back-link">Já tem conta? Faça login</a>
       </form>
     </div>
   </div>
 
   <script src="js/script.js"></script>
-  <script src="js/login.js"></script>
+  <script src="js/cadastroUsuario.js"></script>
 </body>
 </html>

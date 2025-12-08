@@ -22,15 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     
-    // Simulação de login bem-sucedido
-    alert('Login bem-sucedido!');
-    
-    // Redirecionar para a página inicial
-    window.location.href = 'index.html';
+    // Verificar credenciais
+    if (autenticarUsuario(email, senha)) {
+      alert('Login bem-sucedido!');
+      
+      // Redirecionar para a página inicial
+      window.location.href = 'index.html';
+    } else {
+      alert('E-mail ou senha incorretos.');
+    }
   });
 
   function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
+  }
+
+  function autenticarUsuario(email, senha) {
+    // Obter DB principal
+    const db = readDB();
+    
+    // Buscar usuário por email e senha
+    const usuario = db.usuarios.find(u => u.email === email && u.senha === senha);
+    
+    if (usuario) {
+      // Salvar sessão do usuário
+      localStorage.setItem('ellp_usuario_logado', JSON.stringify({
+        email: usuario.email,
+        role: usuario.role,
+      }));
+      return true;
+    }
+    
+    return false;
   }
 });

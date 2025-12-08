@@ -13,11 +13,11 @@ const DB_KEY = 'ellp_db_v1';
 function readDB() {
   const raw = localStorage.getItem(DB_KEY);
   if (!raw) {
-    const init = { escolas: [], professores: [], tutores: [], alunos: [], oficinas: [] };
+    const init = { escolas: [], professores: [], tutores: [], alunos: [], oficinas: [], usuarios: [] };
     localStorage.setItem(DB_KEY, JSON.stringify(init));
     return init;
   }
-  try { return JSON.parse(raw); } catch(e){ return { escolas: [], professores: [], tutores: [], alunos: [], oficinas: [] }; }
+  try { return JSON.parse(raw); } catch(e){ return { escolas: [], professores: [], tutores: [], alunos: [], oficinas: [], usuarios: [] }; }
 }
 
 function writeDB(db){

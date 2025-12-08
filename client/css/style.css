@@ -304,6 +304,19 @@ footer{
   box-shadow: 0 6px 20px rgba(108, 99, 255, 0.3);
 }
 
+.back-link {
+  display: block;
+  text-align: center;
+  margin-top: 16px;
+  color: var(--purple);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
 .error-message {
   background: #fee;
   color: #c33;
