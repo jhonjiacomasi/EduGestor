@@ -5,6 +5,7 @@ import com.edu.gestor.service.OficinaService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/oficinas")
@@ -27,13 +28,13 @@ public class OficinaController {
     }
 
     @GetMapping("/{id}")
-    public Oficina buscar(@PathVariable Integer id) {
-        return service.buscarPorId(id).orElse(null);
+    public Optional<Oficina> buscar(@PathVariable Integer id) {
+        return service.buscarPorId(id);
     }
 
     @PutMapping("/{id}")
     public Oficina atualizar(@PathVariable Integer id, @RequestBody Oficina oficina) {
-        oficina.setIdOficina(id);
+        oficina.setId(id);
         return service.salvar(oficina);
     }
 

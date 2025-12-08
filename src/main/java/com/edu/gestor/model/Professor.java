@@ -1,35 +1,28 @@
 package com.edu.gestor.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 @Entity
-@Table(name = "professor")
+@Table(name = "professor") 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Professor {
+public class Professor { 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idProfessor;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_professor")
-	private Integer id;
+    @Column(length = 100, nullable = false)
+    private String nomeProfessor;
 
-	@Column(name = "nome_professor", nullable = false, length = 100)
-	private String nomeProfessor;
-
-	@Column(name = "email", length = 100)
-	private String email;
-
-	public void setIdProfessor(Integer id2) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Column(length = 100)
+    private String email; 
+    
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+    
 }
