@@ -15,14 +15,15 @@
         <p>Cadastro de Usuário</p>
       </div>
       
-      <form id="cadastroForm">
+      <form id="cadastroForm" method="post" action="javascript:void(0)">
         <div class="form-group">
-          <label for="email">E-mail</label>
+          <label for="email">E-mail (Nome de usuário)</label>
           <input 
             type="email" 
             id="email" 
             name="email" 
             placeholder="seu@email.com" 
+            autocomplete="username"
             required 
           />
         </div>
@@ -34,6 +35,8 @@
             id="senha" 
             name="senha" 
             placeholder="••••••••" 
+            autocomplete="new-password"
+            minlength="6"
             required 
           />
         </div>
@@ -42,9 +45,9 @@
           <label for="role">Tipo de Usuário</label>
           <select id="role" name="role" required>
             <option value="">Selecione...</option>
-            <option value="admin">Administrador</option>
-            <option value="professor">Professor</option>
-            <option value="tutor">Tutor</option>
+            <option value="ADMIN">Administrador</option>
+            <option value="PROFESSOR">Professor</option>
+            <option value="TUTOR">Tutor</option>
           </select>
         </div>
         
@@ -54,6 +57,7 @@
     </div>
   </div>
 
+  <script src="js/api.js"></script>
   <script src="js/script.js"></script>
   <script src="js/cadastroUsuario.js"></script>
 </body>
