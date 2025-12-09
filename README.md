@@ -1,39 +1,53 @@
 ## 🎓 Sistema de Controle de Oficinas Acadêmicas
 
 ### 📘 Descrição
-Aplicação web para gerenciamento de oficinas acadêmicas, permitindo o cadastro de professores, tutores, alunos, temas de oficinas e emissão de certificados digitais. O sistema visa facilitar a organização e acompanhamento das atividades extracurriculares em instituições de ensino.
+Aplicação web para gerenciamento de oficinas acadêmicas do projeto **ELLP (Ensino Lúdico de Lógica e Programação)**, permitindo o cadastro de professores, tutores, alunos, escolas, temas de oficinas e emissão de certificados digitais. O sistema visa facilitar a organização e acompanhamento das atividades extracurriculares em instituições de ensino.
 
 ---
 
 ### 🛠️ Tecnologias Utilizadas
 
-| Camada       | Tecnologia                     |
-|--------------|--------------------------------|
-| Backend      | Java 17, Spring Boot, JPA |
-| Frontend     | React|
-| Banco de Dados | PostgreSQL                   |
-| Testes       | JUnit, Mockito, Cypress        |
-| Autenticação | JWT         |
-| Deploy       | Railway (backend), Vercel (frontend) |
+| Camada         | Tecnologia                          |
+|----------------|-------------------------------------|
+| Backend        | Java 17, Spring Boot 3.x, JPA/Hibernate |
+| Frontend       | HTML5, CSS3, JavaScript (Vanilla)   |
+| Banco de Dados | PostgreSQL                          |
+| Autenticação   | JWT (JSON Web Tokens)               |
+| Build          | Maven                               |
 
 ---
 
-### 📌 Requisitos Funcionais
+### 📌 Funcionalidades
 
-- Cadastro de professores, tutores e alunos
-- Criação e gerenciamento de oficinas com temas e datas
+#### Autenticação e Autorização
+- Login com JWT
+- Registro de novos usuários
+- Controle de acesso por roles: **ADMIN**, **PROFESSOR**, **TUTOR**, **ALUNO**
+
+#### Cadastros
+- **Escolas**: Nome, cidade, endereço, estado
+- **Professores**: Nome, email
+- **Tutores**: Nome, telefone
+- **Alunos**: Nome, escola vinculada
+
+#### Oficinas
+- Criação e gerenciamento de oficinas com tema e data
+- Vinculação de professor responsável e tutor
 - Inscrição de alunos nas oficinas
-- Registro de presença
-- Emissão de certificados digitais em PDF
-- Painel administrativo para controle das oficinas
-- Autenticação e autorização por perfil (admin, professor, tutor, aluno)
+
+#### Certificados
+- Emissão de certificados digitais para alunos participantes
 
 ---
 
 ### 🏗️ Arquitetura do Sistema
 
 ```
-[ React SPA ] ←→ [ Spring Boot REST API ] ←→ [ PostgreSQL ]
+┌─────────────────┐     HTTP/REST     ┌─────────────────┐     JPA      ┌─────────────┐
+│   Frontend      │ ◄───────────────► │   Spring Boot   │ ◄──────────► │  PostgreSQL │
+│   (Vanilla JS)  │                   │   REST API      │              │             │
+└─────────────────┘                   └─────────────────┘              └─────────────┘
+     Port 3000                              Port 8080                     Port 5432
 ```
 
 - **Frontend**: Interface com React, formulários dinâmicos e dashboards
@@ -63,24 +77,43 @@ Aplicação web para gerenciamento de oficinas acadêmicas, permitindo o cadastr
 
 ---
 
-### 📄 Como Executar o Projeto
+### 🚀 Como Executar o Projeto
 
-#### Backend
+#### Pré-requisitos
+- Java 17+
+- PostgreSQL 12+
+- Node.js (opcional, para live-server)
+
+#### 1. Configurar Banco de Dados
+```sql
+CREATE DATABASE edugestor;
+```
+
+#### 2. Executar o Backend
 ```bash
-cd backend
 ./mvnw spring-boot:run
 ```
+Backend em `http://localhost:8080`
 
-#### Frontend
+#### 3. Executar o Frontend
 ```bash
-cd frontend
-npm install
-npm run dev
+cd client
+npx live-server --port=3000
 ```
+Frontend em `http://localhost:3000`
 
 ---
 
-### 📎 Licença
+### 🔑 Fluxo de Autenticação
+
+1. Usuário faz login com `username` e `password`
+2. Backend valida e retorna JWT token
+3. Frontend armazena token no localStorage
+4. Token enviado em todas requisições: `Authorization: Bearer <token>`
+
+---
+
+### 📄 Licença
 Projeto acadêmico sob licença MIT.
 
 ---
