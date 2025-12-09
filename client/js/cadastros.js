@@ -1,6 +1,9 @@
-// cadastros.js
 document.addEventListener('DOMContentLoaded', () => {
-  // forms
+  if (!Auth.isAuthenticated()) {
+    window.location.href = 'login.html';
+    return;
+  }
+
   const formEscola = document.getElementById('formEscola');
   const formProfTutor = document.getElementById('formProfTutor');
   const formAluno = document.getElementById('formAluno');
@@ -14,9 +17,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const raField = document.getElementById('raField');
   const tutorRAInput = document.getElementById('tutorRA');
 
-  // Controla visibilidade do campo RA
+  const exportBtn = document.getElementById('exportBtn');
+  const importFile = document.getElementById('importFile');
+
+  let dataCache = {
+    escolas: [],
+    professores: [],
+    tutores: [],
+    alunos: [],
+  };
+
   profTipoSelect?.addEventListener('change', e => {
-    if(e.target.value === 'tutor') {
+    if (e.target.value === 'tutor') {
       raField.style.display = 'block';
       tutorRAInput.setAttribute('required', 'required');
     } else {
@@ -26,16 +38,75 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  const exportBtn = document.getElementById('exportBtn');
-  const importFile = document.getElementById('importFile');
+  function mapEscola(e) {
+    return {
+      id: e.idEscola,
+      nome: e.nomeEscola,
+      cidade: e.cidade,
+      contato: e.endereco,
+      coordenadorDiretor: e.estado,
+    };
+  }
 
-  function refreshUI(){
-    const db = readDB();
+  function mapProfessor(p) {
+    return {
+      id: p.idProfessor,
+      nome: p.nomeProfessor,
+      email: p.email,
+    };
+  }
 
-    // escolas
+  function mapTutor(t) {
+    return {
+      id: t.id,
+      nome: t.nomeTutor,
+      ra: t.telefone,
+      email: '',
+    };
+  }
+
+  function mapAluno(a) {
+    return {
+      id: a.idAluno,
+      nome: a.nomeAluno,
+      escolaId: a.escola?.idEscola || null,
+      idade: null,
+      ano: null,
+      responsavel: null,
+      contatoResp: null,
+    };
+  }
+
+  async function loadData() {
+    try {
+      const [escolasRaw, professoresRaw, tutoresRaw, alunosRaw] = await Promise.all([
+        API.escolas.listar(),
+        API.professores.listar(),
+        API.tutores.listar(),
+        API.alunos.listar(),
+      ]);
+
+      const escolas = (escolasRaw || []).map(mapEscola);
+      const professores = (professoresRaw || []).map(mapProfessor);
+      const tutores = (tutoresRaw || []).map(mapTutor);
+      const alunos = (alunosRaw || []).map(mapAluno);
+
+      dataCache = { escolas, professores, tutores, alunos };
+      return dataCache;
+    } catch (error) {
+      console.error('Erro ao carregar dados:', error);
+      showError('Erro ao carregar dados: ' + error.message);
+      return dataCache;
+    }
+  }
+
+  async function refreshUI() {
+    const data = await loadData();
+
     listaEscolasEl.innerHTML = '';
     alunoEscolaSelect.innerHTML = '<option value="">-- Sem escola --</option>';
-    db.escolas.forEach((e, i) => {
+    
+    data.escolas.forEach((e) => {
       const li = document.createElement('li');
       li.innerHTML = `
         <strong>${e.nome}</strong><br>
@@ -44,18 +115,19 @@ document.addEventListener('DOMContentLoaded', () => {
         ${e.contato ? '📞 ' + e.contato : ''}
       `;
       listaEscolasEl.appendChild(li);
+      
       const opt = document.createElement('option');
-      opt.value = i;
+      opt.value = e.id;
       opt.textContent = e.nome + (e.cidade ? ` (${e.cidade})` : '');
       alunoEscolaSelect.appendChild(opt);
     });
 
-    // profs/tutores
     listaProfTutEl.innerHTML = '';
     const combined = [
-      ...db.professores.map(p => ({...p, tipo: 'Professor'})),
-      ...db.tutores.map(t => ({...t, tipo: 'Tutor'}))
+      ...data.professores.map(p => ({ ...p, tipo: 'Professor' })),
+      ...data.tutores.map(t => ({ ...t, tipo: 'Tutor' })),
     ];
+    
     combined.forEach(item => {
       const li = document.createElement('li');
       li.innerHTML = `
@@ -67,10 +139,11 @@ document.addEventListener('DOMContentLoaded', () => {
       listaProfTutEl.appendChild(li);
     });
 
-    // alunos
     listaAlunosEl.innerHTML = '';
-    db.alunos.forEach((a) => {
-      const escolaNome = (a.escolaIndex !== null && db.escolas[a.escolaIndex]) ? db.escolas[a.escolaIndex].nome : '—';
+    data.alunos.forEach((a) => {
+      const escola = data.escolas.find(e => e.id === a.escolaId);
+      const escolaNome = escola ? escola.nome : '—';
+      
       const li = document.createElement('li');
       li.innerHTML = `
         <strong>${a.nome}</strong> ${a.idade ? '(' + a.idade + ' anos)' : ''}<br>
@@ -83,76 +156,117 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // handlers
-  formEscola?.addEventListener('submit', e=>{
+  formEscola?.addEventListener('submit', async e => {
     e.preventDefault();
+
     const nome = document.getElementById('escolaNome').value.trim();
     const cidade = document.getElementById('escolaCidade').value.trim();
     const contato = document.getElementById('escolaContato').value.trim();
     const coordenadorDiretor = document.getElementById('escolaCoordenadorDiretor').value.trim();
-    if(!nome) return alert('Preencha o nome da escola.');
-    const db = readDB();
-    db.escolas.push({ nome, cidade, contato, coordenadorDiretor });
-    writeDB(db);
-    formEscola.reset();
-    refreshUI();
+    
+    if (!nome) {
+      showError('Preencha o nome da escola.');
+      return;
+    }
+
+    try {
+      await API.escolas.criar({ nome, cidade, contato, coordenadorDiretor });
+      showSuccess('Escola cadastrada com sucesso!');
+      formEscola.reset();
+      await refreshUI();
+    } catch (error) {
+      showError('Erro ao cadastrar escola: ' + error.message);
+    }
   });
 
-  formProfTutor?.addEventListener('submit', e=>{
+  formProfTutor?.addEventListener('submit', async e => {
     e.preventDefault();
+    
     const tipo = document.getElementById('profTipo').value;
     const nome = document.getElementById('profNome').value.trim();
     const email = document.getElementById('profEmail').value.trim();
     const ra = document.getElementById('tutorRA').value.trim();
-    if(!nome) return alert('Preencha o nome.');
-    const db = readDB();
-    if(tipo === 'professor') {
-      db.professores.push({ nome, email });
-    } else {
-      db.tutores.push({ nome, email, ra });
+    
+    if (!nome) {
+      showError('Preencha o nome.');
+      return;
     }
-    writeDB(db);
-    formProfTutor.reset();
-    raField.style.display = 'none';
-    tutorRAInput.removeAttribute('required');
-    refreshUI();
-  });  
-  
-  formAluno?.addEventListener('submit', e=>{
+
+    try {
+      if (tipo === 'professor') {
+        await API.professores.criar({ nome, email });
+      } else {
+        await API.tutores.criar({ nome, email, ra });
+      }
+      
+      showSuccess(`${tipo === 'professor' ? 'Professor' : 'Tutor'} cadastrado com sucesso!`);
+      formProfTutor.reset();
+      raField.style.display = 'none';
+      tutorRAInput.removeAttribute('required');
+      await refreshUI();
+    } catch (error) {
+      showError('Erro ao cadastrar: ' + error.message);
+    }
+  });
+
+  formAluno?.addEventListener('submit', async e => {
     e.preventDefault();
+
     const nome = document.getElementById('alunoNome').value.trim();
     const idade = document.getElementById('alunoIdade').value;
     const responsavel = document.getElementById('alunoResponsavel').value.trim();
     const contatoResp = document.getElementById('alunoContatoResp').value.trim();
     const ano = document.getElementById('alunoAno').value.trim();
-    const escolaIndex = document.getElementById('alunoEscola').value !== '' ? Number(document.getElementById('alunoEscola').value) : null;
-    if(!nome) return alert('Preencha o nome do aluno.');
-    const db = readDB();
-    db.alunos.push({ nome, idade: idade ? Number(idade) : null, responsavel, contatoResp, ano, escolaIndex });
-    writeDB(db);
-    formAluno.reset();
-    refreshUI();
+    const escolaId = document.getElementById('alunoEscola').value || null;
+    
+    if (!nome) {
+      showError('Preencha o nome do aluno.');
+      return;
+    }
+
+    try {
+      await API.alunos.criar({
+        nome,
+        idade: idade ? Number(idade) : null,
+        responsavel,
+        contatoResp,
+        ano,
+        escolaId,
+      });
+      showSuccess('Aluno cadastrado com sucesso!');
+      formAluno.reset();
+      await refreshUI();
+    } catch (error) {
+      showError('Erro ao cadastrar aluno: ' + error.message);
+    }
   });
 
-  exportBtn?.addEventListener('click', e=>{
-    exportDB();
+
+  exportBtn?.addEventListener('click', async () => {
+    await exportData();
   });
 
-  importFile?.addEventListener('change', e=>{
+
+  importFile?.addEventListener('change', async e => {
     const file = e.target.files[0];
-    if(!file) return;
-    if(!confirm('Importar um backup irá substituir os dados atuais. Deseja continuar?')){ e.target.value = ''; return; }
-    importDB(file, (ok) => {
-      if(ok){
-        alert('Importado com sucesso!');
-        refreshUI();
-      }else{
-        alert('Falha ao importar. Verifique o arquivo JSON.');
+    if (!file) return;
+    
+    if (!confirm('Importar um backup irá substituir os dados atuais. Deseja continuar?')) {
+      e.target.value = '';
+      return;
+    }
+    
+    await importData(file, async (ok) => {
+      if (ok) {
+        showSuccess('Importado com sucesso!');
+        await refreshUI();
+      } else {
+        showError('Falha ao importar. Verifique o arquivo JSON.');
       }
       e.target.value = '';
     });
   });
 
-  // inicializa UI
+
   refreshUI();
 });

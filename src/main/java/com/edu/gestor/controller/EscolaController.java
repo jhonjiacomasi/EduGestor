@@ -1,8 +1,8 @@
 package com.edu.gestor.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
-//Importe a classe de segurança
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,20 +28,22 @@ public class EscolaController {
 		this.service = service;
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping
+	public List<Escola> listar() {
+		return service.listarTodas();
+	}
+
 	@PostMapping
 	public Escola criar(@RequestBody Escola escola) {
 		return service.salvar(escola);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	@PutMapping("/{id}")
 	public Escola atualizar(@PathVariable Integer id, @RequestBody Escola escola) {
 		escola.setIdEscola(id);
 		return service.salvar(escola);
 	}
 
-	@PreAuthorize("hasRole('ADMIN')")
 	@DeleteMapping("/{id}")
 	public void deletar(@PathVariable Integer id) {
 		service.deletar(id);
