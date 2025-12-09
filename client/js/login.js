@@ -1,59 +1,22 @@
-// login.js
-document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('loginForm');
-  const emailInput = document.getElementById('email');
-  const senhaInput = document.getElementById('senha');
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('loginForm');
+  if (Auth.isAuthenticated()) { window.location.href = 'index.html'; return; }
 
-  loginForm?.addEventListener('submit', function(e) {
+  form.onsubmit = function(e) {
     e.preventDefault();
+    var email = document.getElementById('email').value.trim();
+    var senha = document.getElementById('senha').value;
     
-    const email = emailInput.value.trim();
-    const senha = senhaInput.value;
-    
-    // Validação básica
-    if (!email || !senha) {
-      alert('Por favor, preencha todos os campos.');
-      return;
-    }
-    
-    // Validação de formato de e-mail
-    if (!isValidEmail(email)) {
-      alert('Por favor, insira um e-mail válido.');
-      return;
-    }
-    
-    // Verificar credenciais
-    if (autenticarUsuario(email, senha)) {
-      alert('Login bem-sucedido!');
-      
-      // Redirecionar para a página inicial
-      window.location.href = 'index.html';
-    } else {
-      alert('E-mail ou senha incorretos.');
-    }
-  });
+    if (!email || !senha) { showError('Preencha todos os campos'); return; }
+    if (!isValidEmail(email)) { showError('Email inválido'); return; }
 
-  function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+    var btn = form.querySelector('button');
+    btn.disabled = true;
+    btn.textContent = 'Entrando...';
 
-  function autenticarUsuario(email, senha) {
-    // Obter DB principal
-    const db = readDB();
-    
-    // Buscar usuário por email e senha
-    const usuario = db.usuarios.find(u => u.email === email && u.senha === senha);
-    
-    if (usuario) {
-      // Salvar sessão do usuário
-      localStorage.setItem('ellp_usuario_logado', JSON.stringify({
-        email: usuario.email,
-        role: usuario.role,
-      }));
-      return true;
-    }
-    
-    return false;
-  }
+    Auth.login(email, senha)
+      .then(function() { showSuccess('Login OK!'); window.location.href = 'index.html'; })
+      .catch(function(err) { showError(err.message || 'Erro no login'); })
+      .finally(function() { btn.disabled = false; btn.textContent = 'Entrar'; });
+  };
 });

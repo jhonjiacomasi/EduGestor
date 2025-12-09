@@ -1,50 +1,46 @@
-// script.js - funções gerais
-document.addEventListener('DOMContentLoaded', () => {
-  const yearEls = ['year','year2','year3','year4'];
-  yearEls.forEach(id => {
-    const el = document.getElementById(id);
-    if(el) el.textContent = new Date().getFullYear();
+document.addEventListener('DOMContentLoaded', function() {
+  ['year', 'year2', 'year3', 'year4'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = new Date().getFullYear();
   });
+  if (typeof Auth !== 'undefined' && !Auth.isPublicPage()) {
+    Auth.init();
+  }
 });
 
-// helpers para LocalStorage
-const DB_KEY = 'ellp_db_v1';
+function showError(msg) { alert('❌ ' + msg); }
+function showSuccess(msg) { alert('✅ ' + msg); }
+function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
 
-function readDB() {
-  const raw = localStorage.getItem(DB_KEY);
-  if (!raw) {
-    const init = { escolas: [], professores: [], tutores: [], alunos: [], oficinas: [], usuarios: [] };
-    localStorage.setItem(DB_KEY, JSON.stringify(init));
-    return init;
+async function exportData() {
+  try {
+    var data = {
+      escolas: await API.escolas.listar(),
+      professores: await API.professores.listar(),
+      tutores: await API.tutores.listar(),
+      alunos: await API.alunos.listar(),
+      oficinas: await API.oficinas.listar()
+    };
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'ellp_backup_' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    showError('Erro ao exportar: ' + e.message);
   }
-  try { return JSON.parse(raw); } catch(e){ return { escolas: [], professores: [], tutores: [], alunos: [], oficinas: [], usuarios: [] }; }
 }
 
-function writeDB(db){
-  localStorage.setItem(DB_KEY, JSON.stringify(db));
-}
-
-function exportDB(){
-  const data = readDB();
-  const a = document.createElement('a');
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
-  a.href = URL.createObjectURL(blob);
-  a.download = `ellp-backup-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-function importDB(file, onFinish){
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    try{
-      const parsed = JSON.parse(e.target.result);
-      // simples validação
-      if(parsed && typeof parsed === 'object'){
-        writeDB(parsed);
-        if(onFinish) onFinish(true);
-      } else { if(onFinish) onFinish(false); }
-    }catch(err){ if(onFinish) onFinish(false); }
-  };
-  reader.readAsText(file);
+async function importData(file, callback) {
+  try {
+    var text = await file.text();
+    var data = JSON.parse(text);
+    console.log('Dados para importar:', data);
+    callback(true);
+  } catch (e) {
+    console.error('Erro ao importar:', e);
+    callback(false);
+  }
 }

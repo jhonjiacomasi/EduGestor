@@ -1,73 +1,24 @@
-// cadastroUsuario.js
-document.addEventListener('DOMContentLoaded', () => {
-  const cadastroForm = document.getElementById('cadastroForm');
-  const emailInput = document.getElementById('email');
-  const senhaInput = document.getElementById('senha');
-  const roleSelect = document.getElementById('role');
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('cadastroForm');
+  if (Auth.isAuthenticated()) { window.location.href = 'index.html'; return; }
 
-  cadastroForm?.addEventListener('submit', function(e) {
+  form.onsubmit = function(e) {
     e.preventDefault();
+    var email = document.getElementById('email').value.trim();
+    var senha = document.getElementById('senha').value;
+    var role = document.getElementById('role').value;
     
-    const email = emailInput.value.trim();
-    const senha = senhaInput.value;
-    const role = roleSelect.value;
-    
-    // Validação básica
-    if (!email || !senha || !role) {
-      alert('Por favor, preencha todos os campos.');
-      return;
-    }
-    
-    // Validação de formato de e-mail
-    if (!isValidEmail(email)) {
-      alert('Por favor, insira um e-mail válido.');
-      return;
-    }
-    
-    // Validação de senha
-    if (senha.length < 6) {
-      alert('A senha deve ter no mínimo 6 caracteres.');
-      return;
-    }
-    
-    // Criar objeto de usuário
-    const usuario = {
-      email: email,
-      senha: senha,
-      role: role
-    };
-    
-    // Salvar no DB principal
-    if (salvarUsuario(usuario)) {
-      alert('Cadastro realizado com sucesso!');
-      
-      // Redirecionar para login
-      window.location.href = 'login.html';
-    }
-  });
+    if (!email || !senha || !role) { showError('Preencha todos os campos'); return; }
+    if (!isValidEmail(email)) { showError('Email inválido'); return; }
+    if (senha.length < 6) { showError('Senha deve ter 6+ caracteres'); return; }
 
-  function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
+    var btn = form.querySelector('button');
+    btn.disabled = true;
+    btn.textContent = 'Cadastrando...';
 
-  function salvarUsuario(usuario) {
-    // Obter DB principal
-    const db = readDB();
-    
-    // Verificar se email já existe
-    const emailExiste = db.usuarios.some(u => u.email === usuario.email);
-    if (emailExiste) {
-      alert('Este e-mail já está cadastrado.');
-      return false;
-    }
-    
-    // Adicionar novo usuário
-    db.usuarios.push(usuario);
-    
-    // Salvar no DB
-    writeDB(db);
-    
-    return true;
-  }
+    Auth.register(email, senha, role)
+      .then(function() { showSuccess('Cadastro OK!'); window.location.href = 'login.html'; })
+      .catch(function(err) { showError(err.message || 'Erro no cadastro'); })
+      .finally(function() { btn.disabled = false; btn.textContent = 'Cadastrar'; });
+  };
 });
